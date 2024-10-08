@@ -1,6 +1,7 @@
 package service;
 
 import entity.Vehicle;
+
 import util.DBConnUtil;
 import util.DBPropertyUtil;
 

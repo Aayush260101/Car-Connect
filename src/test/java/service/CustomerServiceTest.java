@@ -28,24 +28,24 @@ public class CustomerServiceTest {
 
         // Now simulate updating the customer details
         customerToUpdate.setFirstName("John");
-        customerToUpdate.setLastName("Smith"); // Updated last name
-        customerToUpdate.setEmail("john.smith@example.com"); // Updated email
-        customerToUpdate.setPhoneNumber("0987654321"); // Updated phone number
-        customerToUpdate.setAddress("456 Oak St"); // Updated address
+        customerToUpdate.setLastName("Smith"); 
+        customerToUpdate.setEmail("john.smith@example.com"); 
+        customerToUpdate.setPhoneNumber("0987654321"); 
+        customerToUpdate.setAddress("456 Oak St"); 
 
-        // Check if updateCustomer runs without throwing exceptions
+        
         assertDoesNotThrow(() -> mockCustomerService.updateCustomer(customerToUpdate));
 
-        // Verify that updateCustomer was called once
+        
         verify(mockCustomerService, times(1)).updateCustomer(customerToUpdate);
 
         // Simulate retrieving the updated customer details after the update
         when(mockCustomerService.getCustomerById(1)).thenReturn(customerToUpdate);
 
-        // Retrieve the updated customer using the mocked getCustomerById
+        
         Customer updatedCustomer = mockCustomerService.getCustomerById(1);
 
-        // Assertions to verify the updated fields
+        
         assertNotNull(updatedCustomer, "Updated customer should not be null.");
         assertEquals("John", updatedCustomer.getFirstName(), "First name should be updated.");
         assertEquals("Smith", updatedCustomer.getLastName(), "Last name should be updated.");

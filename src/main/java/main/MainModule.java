@@ -3,6 +3,7 @@ package main;
 import entity.Customer;
 
 
+
 import entity.Vehicle;
 import entity.Reservation;
 import entity.Admin;
@@ -178,17 +179,19 @@ public class MainModule {
         }
     }
     
-    private static void cancelReservation(){
-    	System.out.print("Enter the Reservation ID which you want to cancel :");
-    	int reservationId = scanner.nextInt();
-    	scanner.nextLine();
-    	try {
-    		reservationService.cancelReservation(reservationId);
-    		System.out.println("Reservation Cancelled Sucessfully");
-    	}catch (SQLException e){
-    		System.out.println("Error Cancelling Reservation : "+e.getMessage());
-    	}
+    private static void cancelReservation() {
+        System.out.print("Enter the Reservation ID which you want to cancel: ");
+        int reservationId = scanner.nextInt();
+        scanner.nextLine();  
+
+        try {
+            reservationService.cancelReservation(reservationId);
+            System.out.println("Reservation cancelled successfully.");
+        } catch (ReservationException e) {
+            System.out.println("Error cancelling reservation: " + e.getMessage());
+        }
     }
+
 
     private static void adminLogin() {
         System.out.print("Enter admin username: ");
@@ -492,18 +495,19 @@ public class MainModule {
     }
     
     private static void updateReservationStatus() {
-    	System.out.print("Enter Reservation ID whose status you want to update");
-    	int reservationId=scanner.nextInt();
-    	scanner.nextLine();
-    	System.out.print("Enter new status (e.g., Confirmed, Cancelled, Completed): ");
-    	String newStatus = scanner.nextLine();
-    	
-    	try {
-    		reservationService.updateReservationStatus(reservationId, newStatus);
-    		System.out.println("Reservation status updated successfully!");
-    	}catch (SQLException e){
-    		System.out.println("Error updating reservation status: " + e.getMessage());
-    	}
+        System.out.print("Enter Reservation ID whose status you want to update: ");
+        int reservationId = scanner.nextInt();
+        scanner.nextLine();  // Clear the buffer
+        System.out.print("Enter new status (e.g., Confirmed, Cancelled, Completed): ");
+        String newStatus = scanner.nextLine();
+
+        try {
+            reservationService.updateReservationStatus(reservationId, newStatus);
+            System.out.println("Reservation status updated successfully!");
+        } catch (ReservationException e) {
+            System.out.println("Error updating reservation status: " + e.getMessage());
+        }
     }
+
 
 }

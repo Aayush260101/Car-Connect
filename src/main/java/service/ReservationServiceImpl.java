@@ -3,6 +3,7 @@ package service;
 import entity.Reservation;
 
 
+
 import util.DBConnUtil;
 import util.DBPropertyUtil;
 
@@ -99,7 +100,7 @@ public class ReservationServiceImpl implements IReservationService {
 
 
     @Override
-    public void updateReservation(Reservation reservation) {
+    public void updateReservation(Reservation reservation) throws ReservationException {
         try (Connection conn = DBConnUtil.getConnection(DBPropertyUtil.getConnectionFromProperties("db.properties"))) {
             String query = "UPDATE Reservation SET CustomerID = ?, VehicleID = ?, StartDate = ?, EndDate = ?, TotalCost = ?, Status = ? WHERE ReservationID = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
@@ -112,39 +113,51 @@ public class ReservationServiceImpl implements IReservationService {
             stmt.setInt(7, reservation.getReservationID());
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+        	throw new ReservationException("Failed to update reservation: " + e.getMessage());
         }
     }
     
- // Method to update reservation status
-    public void updateReservationStatus(int reservationId, String newStatus) throws SQLException {
-    	try(Connection conn = DBConnUtil.getConnection(DBPropertyUtil.getConnectionFromProperties("db.properties"))){
-        String query = "UPDATE Reservation SET Status = ? WHERE ReservationID = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+ 
+    public void updateReservationStatus(int reservationId, String newStatus) throws ReservationException {
+        
+        try (Connection conn = DBConnUtil.getConnection(DBPropertyUtil.getConnectionFromProperties("db.properties"));
+             PreparedStatement stmt = conn.prepareStatement("UPDATE Reservation SET Status = ? WHERE ReservationID = ?")) {
+            
+            
             stmt.setString(1, newStatus);
             stmt.setInt(2, reservationId);
+
+           
             int rowsAffected = stmt.executeUpdate();
+
+            // If no rows were affected, throw a custom exception
             if (rowsAffected == 0) {
-                throw new SQLException("Failed to update reservation status. Reservation not found.");
+                throw new ReservationException("Failed to update reservation status. Reservation not found.");
             }
+
+        } catch (SQLException e) {
+            
+            throw new ReservationException("Database error while updating reservation status: " + e.getMessage());
         }
-    	}
     }
 
+
     @Override
-    public void cancelReservation(int reservationId) throws SQLException {
-        try (Connection conn = DBConnUtil.getConnection(DBPropertyUtil.getConnectionFromProperties("db.properties"))) {
-            String query = "DELETE FROM Reservation WHERE ReservationID = ?";
-            try(PreparedStatement stmt = conn.prepareStatement(query)){
+    public void cancelReservation(int reservationId) throws ReservationException {
+        try (Connection conn = DBConnUtil.getConnection(DBPropertyUtil.getConnectionFromProperties("db.properties"));
+             PreparedStatement stmt = conn.prepareStatement("DELETE FROM Reservation WHERE ReservationID = ?")) {
+            
             stmt.setInt(1, reservationId);
             int rowsAffected = stmt.executeUpdate();
+
             if (rowsAffected == 0) {
-                throw new SQLException("Failed to delete reservation. Reservation not found.");
+                throw new ReservationException("Failed to delete reservation. Reservation not found.");
             }
-        } 
-        }catch (SQLException e) {
-            e.printStackTrace();
-            
+
+        } catch (SQLException e) {
+            // Wrap the SQLException in a custom ReservationException
+            throw new ReservationException("Database error while cancelling reservation: " + e.getMessage());
+        }
     }
-    }
+
 }

@@ -1,20 +1,3 @@
-/*
- * package util;
- * 
- * import java.io.FileInputStream; import java.io.IOException; import
- * java.sql.Connection; import java.sql.DriverManager; import
- * java.sql.SQLException; import java.util.Properties;
- * 
- * public class DBPropertyUtil { public static Connection
- * getConnectionFromProperties(String propertiesFileName) { Properties
- * properties = new Properties(); try (FileInputStream input = new
- * FileInputStream(propertiesFileName)) { properties.load(input); String url =
- * properties.getProperty("db.url"); String user =
- * properties.getProperty("db.user"); String password =
- * properties.getProperty("db.password"); return
- * DriverManager.getConnection(url, user, password); } catch (IOException |
- * SQLException e) { e.printStackTrace(); return null; } } }
- */
 
 package util;
 

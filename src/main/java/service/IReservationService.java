@@ -11,6 +11,6 @@ public interface IReservationService {
     Reservation getReservationById(int reservationId);
     List<Reservation> getReservationsByCustomerId(int customerId);
     void createReservation(Reservation reservation) throws ReservationException;
-    void updateReservation(Reservation reservation);
-    void cancelReservation(int reservationId) throws SQLException;
+    void updateReservation(Reservation reservation) throws ReservationException;
+    void cancelReservation(int reservationId) throws ReservationException;
 }
